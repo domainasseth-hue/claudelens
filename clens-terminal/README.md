@@ -5,7 +5,7 @@ A lightweight, zero-dependency local CLI utility and real-time status line engin
 ## The Core Problem
 Running custom model-driven commands or scripts to inspect active session usage naturally appends heavy text data arrays to subsequent conversation turns. This recursive token bloat quickly exhausts your subscription caps and forces premature context compactions.
 
-`clens` provides a dual-architecture solution to monitor your environment at **exactly zero token cost**.
+`clens` provides a dual-architecture solution to monitor your environment.<!-- \\ not true due to arbitrary skill.md structure. -->
 
 ---
 
