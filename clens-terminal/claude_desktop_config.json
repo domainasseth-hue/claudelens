@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "clens-telemetry": {
+      "command": "cmd.exe",
+      "args": [
+        "/c",
+        "python",
+        "C:\\Users\\YOUR_USERNAME\\Desktop\\clens.py"
+      ]
+    }
+  }
+}
