@@ -12,7 +12,7 @@ Claude Code wraps token consumption behind session blocks and `/cost` commands t
 
 ## Screenshots
 
-![Dashboard](screenshots/dashboard.png)
+![Dashboard](claudelens.PNG)
 
 ## Installation
 
