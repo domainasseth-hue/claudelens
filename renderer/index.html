@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ClaudeLens</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ── Titlebar ────────────────────────────────────────────────────── -->
+  <div id="titlebar">
+    <div class="titlebar-drag">
+      <span class="titlebar-icon">&#9672;</span>
+      <span class="titlebar-title">ClaudeLens</span>
+    </div>
+    <div class="titlebar-buttons">
+      <button class="titlebar-btn" id="btn-minimize" title="Minimize">&#8722;</button>
+      <button class="titlebar-btn" id="btn-maximize" title="Maximize">&#9633;</button>
+      <button class="titlebar-btn titlebar-btn-close" id="btn-close" title="Close">&#10005;</button>
+    </div>
+  </div>
+
+  <!-- ── App Container ───────────────────────────────────────────────── -->
+  <div id="app-container">
+
+    <!-- ── Sidebar ────────────────────────────────────────────────── -->
+    <nav id="sidebar">
+      <button class="nav-btn active" data-view="dashboard" title="Dashboard">
+        <span class="nav-icon">&#128200;</span>
+        <span class="nav-tooltip">Dashboard</span>
+      </button>
+      <button class="nav-btn" data-view="sessions" title="Sessions">
+        <span class="nav-icon">&#128203;</span>
+        <span class="nav-tooltip">Sessions</span>
+      </button>
+      <button class="nav-btn" data-view="projects" title="Projects">
+        <span class="nav-icon">&#128193;</span>
+        <span class="nav-tooltip">Projects</span>
+      </button>
+      <button class="nav-btn" data-view="graphs" title="Graphs">
+        <span class="nav-icon">&#128202;</span>
+        <span class="nav-tooltip">Graphs</span>
+      </button>
+      <button class="nav-btn" data-view="settings" title="Settings">
+        <span class="nav-icon">&#9881;</span>
+        <span class="nav-tooltip">Settings</span>
+      </button>
+    </nav>
+
+    <!-- ── Main Content ───────────────────────────────────────────── -->
+    <main id="content">
+
+      <!-- Dashboard View -->
+      <section id="view-dashboard" class="view active">
+        <!-- Top row stat cards -->
+        <div class="stat-cards-row">
+          <div class="stat-card" id="card-live-session">
+            <div class="stat-label">
+              <span class="live-dot" id="live-dot"></span> LIVE SESSION
+            </div>
+            <div class="stat-value" id="live-tokens">0</div>
+            <div class="stat-sub" id="live-sub">No active session</div>
+          </div>
+          <div class="stat-card" id="card-session-cost">
+            <div class="stat-label">SESSION COST</div>
+            <div class="stat-value" id="session-cost">$0.00</div>
+            <div class="stat-sub" id="session-cost-model">--</div>
+          </div>
+          <div class="stat-card" id="card-alltime-tokens">
+            <div class="stat-label">ALL TIME TOKENS</div>
+            <div class="stat-value" id="alltime-tokens">0</div>
+            <div class="stat-sub">across all projects</div>
+          </div>
+          <div class="stat-card" id="card-alltime-cost">
+            <div class="stat-label">ALL TIME COST</div>
+            <div class="stat-value" id="alltime-cost">$0.00</div>
+            <div class="stat-sub">estimated total</div>
+          </div>
+        </div>
+
+        <!-- Bottom two panels -->
+        <div class="panel-row">
+          <div class="panel" id="panel-today">
+            <h3 class="panel-title">TODAY'S SESSIONS</h3>
+            <div class="panel-content" id="today-sessions-list">
+              <div class="zero-state">No sessions today</div>
+            </div>
+          </div>
+          <div class="panel" id="panel-top-projects">
+            <h3 class="panel-title">TOP PROJECTS THIS WEEK</h3>
+            <div class="panel-content" id="top-projects-chart">
+              <div class="zero-state">No data this week</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sessions View -->
+      <section id="view-sessions" class="view">
+        <div class="view-header">
+          <h2>Sessions</h2>
+          <div class="search-bar">
+            <input type="text" id="session-search" placeholder="Filter by project name...">
+          </div>
+        </div>
+        <div class="table-container">
+          <table id="sessions-table">
+            <thead>
+              <tr>
+                <th data-sort="startTime" class="sortable sorted-desc">Date &#9660;</th>
+                <th data-sort="project" class="sortable">Project</th>
+                <th data-sort="durationMinutes" class="sortable">Duration</th>
+                <th data-sort="inputTokens" class="sortable">Input Tokens</th>
+                <th data-sort="outputTokens" class="sortable">Output Tokens</th>
+                <th data-sort="cacheTokens" class="sortable">Cache Tokens</th>
+                <th data-sort="totalTokens" class="sortable">Total Tokens</th>
+                <th data-sort="cost" class="sortable">Est. Cost</th>
+              </tr>
+            </thead>
+            <tbody id="sessions-tbody"></tbody>
+            <tfoot id="sessions-tfoot"></tfoot>
+          </table>
+          <div class="zero-state table-zero" id="sessions-zero">No sessions found</div>
+        </div>
+      </section>
+
+      <!-- Projects View -->
+      <section id="view-projects" class="view">
+        <div class="view-header">
+          <h2>Projects</h2>
+        </div>
+        <div class="projects-grid" id="projects-grid">
+          <div class="zero-state">No projects found</div>
+        </div>
+      </section>
+
+      <!-- Graphs View -->
+      <section id="view-graphs" class="view">
+        <div class="view-header">
+          <h2>Daily Token Burn — Last 30 Days</h2>
+        </div>
+        <div class="graph-container" id="graph-container">
+          <div class="zero-state">No data available</div>
+        </div>
+        <div class="graph-rolling">
+          <h3>7-Day Rolling Average</h3>
+          <svg id="rolling-svg" viewBox="0 0 800 200" preserveAspectRatio="none"></svg>
+          <div class="zero-state" id="rolling-zero">No data available</div>
+        </div>
+      </section>
+
+      <!-- Settings View -->
+      <section id="view-settings" class="view">
+        <div class="view-header">
+          <h2>Settings</h2>
+        </div>
+        <div class="settings-section">
+          <h3>Model Pricing (per million tokens)</h3>
+          <div class="settings-grid" id="pricing-grid">
+            <!-- Populated by JS -->
+          </div>
+          <button class="btn-primary" id="btn-save-pricing">Save Pricing</button>
+        </div>
+        <div class="settings-section">
+          <h3>JSONL Path Override</h3>
+          <div class="settings-row">
+            <input type="text" id="jsonl-path-input" class="settings-input" value="">
+            <button class="btn-primary" id="btn-save-path">Save Path</button>
+          </div>
+          <p class="settings-hint" id="path-hint"></p>
+        </div>
+        <div class="settings-section about-section">
+          <h3>About</h3>
+          <p>ClaudeLens v1.0.0</p>
+          <p class="settings-hint">Reads your local Claude Code session logs. Your data never leaves your machine.</p>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

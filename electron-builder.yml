@@ -1,0 +1,10 @@
+appId: com.claudelens.app
+productName: ClaudeLens
+directories:
+  output: dist
+win:
+  target: nsis
+  icon: default
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true

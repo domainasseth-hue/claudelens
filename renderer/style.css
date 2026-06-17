@@ -1,0 +1,934 @@
+/* ── Reset ─────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ── CSS Variables ─────────────────────────────────────────────────── */
+:root {
+  --bg-primary: #0f0e0d;
+  --bg-secondary: #1a1815;
+  --bg-card: rgba(212, 162, 127, 0.06);
+  --border: rgba(212, 162, 127, 0.15);
+  --accent-primary: #d4a27f;
+  --accent-secondary: #c96442;
+  --accent-glow: rgba(201, 100, 66, 0.2);
+  --text-primary: #f5f0eb;
+  --text-secondary: rgba(245, 240, 235, 0.6);
+  --text-muted: rgba(245, 240, 235, 0.35);
+  --success: #4caf82;
+  --warning: #f5a623;
+  --critical: #e74c3c;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Scrollbar ─────────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-primary);
+}
+
+/* ── Titlebar ──────────────────────────────────────────────────────── */
+#titlebar {
+  height: 40px;
+  min-height: 40px;
+  background: #0a0908;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px;
+  user-select: none;
+  -webkit-app-region: drag;
+  border-bottom: 1px solid var(--border);
+}
+
+.titlebar-drag {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.titlebar-icon {
+  color: var(--accent-primary);
+  font-size: 14px;
+}
+
+.titlebar-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  letter-spacing: 0.5px;
+}
+
+.titlebar-buttons {
+  display: flex;
+  -webkit-app-region: no-drag;
+}
+
+.titlebar-btn {
+  width: 36px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.titlebar-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-primary);
+}
+
+.titlebar-btn-close:hover {
+  background: var(--critical);
+  color: #fff;
+}
+
+/* ── App Container ─────────────────────────────────────────────────── */
+#app-container {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ── Sidebar ───────────────────────────────────────────────────────── */
+#sidebar {
+  width: 60px;
+  min-width: 60px;
+  background: var(--bg-secondary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 0;
+  gap: 4px;
+  border-right: 1px solid var(--border);
+}
+
+.nav-btn {
+  width: 44px;
+  height: 44px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 20px;
+  cursor: pointer;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: all 0.15s ease;
+}
+
+.nav-btn:hover {
+  background: var(--bg-card);
+  color: var(--text-primary);
+}
+
+.nav-btn.active {
+  color: var(--accent-primary);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+}
+
+.nav-tooltip {
+  display: none;
+  position: absolute;
+  left: 52px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #1a1815;
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  z-index: 100;
+  pointer-events: none;
+}
+
+.nav-btn:hover .nav-tooltip {
+  display: block;
+}
+
+.nav-icon {
+  pointer-events: none;
+}
+
+/* ── Main Content ──────────────────────────────────────────────────── */
+#content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 24px;
+}
+
+/* ── Views ─────────────────────────────────────────────────────────── */
+.view {
+  display: none;
+  animation: fadeIn 0.15s ease;
+}
+
+.view.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.view-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.view-header h2 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* ── Stat Cards ────────────────────────────────────────────────────── */
+.stat-cards-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+  transition: all 0.2s ease;
+}
+
+.stat-card:hover {
+  border-color: rgba(212, 162, 127, 0.35);
+}
+
+.stat-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stat-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+}
+
+.stat-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 6px;
+}
+
+/* Live dot */
+.live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  display: inline-block;
+  transition: background 0.3s ease;
+}
+
+.live-dot.active {
+  background: var(--success);
+  box-shadow: 0 0 8px var(--success);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* ── Panels ────────────────────────────────────────────────────────── */
+.panel-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+  transition: all 0.2s ease;
+}
+
+.panel:hover {
+  border-color: rgba(212, 162, 127, 0.35);
+}
+
+.panel-title {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+
+.panel-content {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+/* ── Today Sessions List ───────────────────────────────────────────── */
+.today-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  margin-bottom: 4px;
+}
+
+.today-row:hover {
+  background: var(--accent-glow);
+}
+
+.today-row-name {
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.today-row-meta {
+  display: flex;
+  gap: 16px;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-secondary);
+}
+
+.today-row-cost {
+  color: var(--accent-primary);
+  font-weight: 600;
+}
+
+/* ── Bar Chart (Pure CSS) ──────────────────────────────────────────── */
+.bar-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 200px;
+  padding: 0 4px;
+}
+
+.bar-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  justify-content: flex-end;
+  position: relative;
+}
+
+.bar-wrapper:hover .bar-tooltip {
+  display: block;
+}
+
+.bar-fill {
+  width: 100%;
+  max-width: 32px;
+  background: linear-gradient(180deg, var(--accent-secondary), var(--accent-primary));
+  border-radius: 4px 4px 0 0;
+  min-height: 2px;
+  transition: opacity 0.15s ease;
+}
+
+.bar-fill:hover {
+  opacity: 0.85;
+}
+
+.bar-label {
+  font-size: 9px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  text-align: center;
+}
+
+.bar-tooltip {
+  display: none;
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1a1815;
+  border: 1px solid var(--border);
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  color: var(--text-primary);
+  white-space: nowrap;
+  z-index: 10;
+  margin-bottom: 6px;
+}
+
+/* ── Table ─────────────────────────────────────────────────────────── */
+.table-container {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0;
+  overflow: auto;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+  max-height: calc(100vh - 180px);
+  position: relative;
+}
+
+.table-zero {
+  display: none;
+}
+
+.table-container:empty-with-zero .table-zero,
+.table-container.has-zero .table-zero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+}
+
+#sessions-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+#sessions-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+#sessions-table th {
+  background: #1a1815;
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+  user-select: none;
+}
+
+#sessions-table th.sortable {
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+#sessions-table th.sortable:hover {
+  color: var(--accent-primary);
+}
+
+#sessions-table th.sortable.sorted-asc,
+#sessions-table th.sortable.sorted-desc {
+  color: var(--accent-primary);
+}
+
+#sessions-table td {
+  padding: 10px 16px;
+  font-size: 13px;
+  color: var(--text-primary);
+  border-bottom: 1px solid rgba(212, 162, 127, 0.06);
+  white-space: nowrap;
+}
+
+#sessions-table tbody tr {
+  transition: background 0.15s ease;
+}
+
+#sessions-table tbody tr:nth-child(even) {
+  background: rgba(212, 162, 127, 0.02);
+}
+
+#sessions-table tbody tr:hover {
+  background: var(--accent-glow);
+}
+
+#sessions-table tfoot td {
+  font-weight: 600;
+  color: var(--accent-primary);
+  background: #1a1815;
+  border-top: 1px solid var(--border);
+  border-bottom: none;
+  padding: 12px 16px;
+  font-size: 13px;
+}
+
+/* ── Search Bar ────────────────────────────────────────────────────── */
+.search-bar input {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 13px;
+  color: var(--text-primary);
+  width: 260px;
+  outline: none;
+  transition: border-color 0.2s ease;
+  font-family: inherit;
+}
+
+.search-bar input::placeholder {
+  color: var(--text-muted);
+}
+
+.search-bar input:focus {
+  border-color: var(--accent-primary);
+}
+
+/* ── Projects Grid ─────────────────────────────────────────────────── */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.project-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+  transition: all 0.2s ease;
+}
+
+.project-card:hover {
+  border-color: rgba(212, 162, 127, 0.35);
+}
+
+.project-card-name {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--text-primary);
+}
+
+.project-card-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.project-card-stat {
+  font-size: 12px;
+}
+
+.project-card-stat-label {
+  color: var(--text-muted);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.project-card-stat-value {
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+
+.project-card-bar-outer {
+  height: 4px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 8px;
+}
+
+.project-card-bar-inner {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-secondary), var(--accent-primary));
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.project-card-last {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 10px;
+}
+
+/* ── Graphs ────────────────────────────────────────────────────────── */
+.graph-container {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 40px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+  margin-bottom: 24px;
+}
+
+.graph-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.graph-legend {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 20px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.legend-swatch {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+}
+
+.legend-bar {
+  background: linear-gradient(180deg, #c96442, #d4a27f);
+}
+
+.legend-line {
+  background: #d4a27f;
+  height: 3px;
+  border-radius: 2px;
+}
+
+/* Bar chart shell — wrapper for y-axis + bars side by side */
+.bar-chart-shell {
+  display: flex;
+  gap: 0;
+  height: 320px;
+  position: relative;
+}
+
+.y-axis {
+  width: 60px;
+  min-width: 60px;
+  position: relative;
+  flex-shrink: 0;
+  border-right: 1px solid rgba(212, 162, 127, 0.12);
+}
+
+.y-tick {
+  position: absolute;
+  right: 8px;
+  transform: translateY(-50%);
+  font-size: 10px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.bar-chart-area {
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+/* Each bar column in the graph */
+.bar-chart-area .bar-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  justify-content: flex-end;
+  position: relative;
+}
+
+.bar-chart-area .bar-inner {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  position: relative;
+}
+
+.bar-chart-area .bar-fill {
+  width: 70%;
+  max-width: 24px;
+  background: linear-gradient(180deg, var(--accent-secondary), var(--accent-primary));
+  border-radius: 4px 4px 0 0;
+  min-height: 4px;
+  transition: opacity 0.15s ease;
+}
+
+.bar-chart-area .bar-fill:hover {
+  opacity: 0.8;
+}
+
+/* X-axis date labels — rotated 45° so they don't overlap */
+.bar-chart-area .bar-label {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 6px;
+  text-align: left;
+  white-space: nowrap;
+  transform: rotate(-45deg);
+  transform-origin: top left;
+  width: 0;
+  height: 20px;
+  line-height: 1;
+}
+
+/* Graph tooltip — dark styled */
+.bar-chart-area .bar-tooltip {
+  display: none;
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1a1815;
+  border: 1px solid rgba(212, 162, 127, 0.3);
+  padding: 8px;
+  border-radius: 6px;
+  font-size: 10px;
+  color: var(--text-primary);
+  white-space: nowrap;
+  z-index: 10;
+  margin-bottom: 6px;
+  pointer-events: none;
+}
+
+.bar-chart-area .bar-inner:hover .bar-tooltip {
+  display: block;
+}
+
+/* Rolling average section */
+.graph-rolling {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 40px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+}
+
+.graph-rolling h3 {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+
+.graph-rolling svg {
+  width: 100%;
+  height: 220px;
+}
+
+/* ── Settings ──────────────────────────────────────────────────────── */
+.settings-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+  margin-bottom: 16px;
+}
+
+.settings-section h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+}
+
+.settings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.settings-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.settings-field label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.settings-field .model-name {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
+}
+
+.settings-field input {
+  background: #0f0e0d;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 7px 10px;
+  font-size: 13px;
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color 0.2s ease;
+  font-family: inherit;
+  font-variant-numeric: tabular-nums;
+  width: 100%;
+}
+
+.settings-field input:focus {
+  border-color: var(--accent-primary);
+}
+
+.settings-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.settings-input {
+  background: #0f0e0d;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color 0.2s ease;
+  font-family: inherit;
+  flex: 1;
+}
+
+.settings-input:focus {
+  border-color: var(--accent-primary);
+}
+
+.settings-hint {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* ── Buttons ───────────────────────────────────────────────────────── */
+.btn-primary {
+  background: var(--accent-secondary);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
+  font-family: inherit;
+}
+
+.btn-primary:hover {
+  background: #d4744e;
+  box-shadow: 0 0 16px var(--accent-glow);
+}
+
+/* ── Zero State ────────────────────────────────────────────────────── */
+.zero-state {
+  color: var(--text-muted);
+  text-align: center;
+  padding: 32px 16px;
+  font-size: 14px;
+}
+
+/* ── Responsive ────────────────────────────────────────────────────── */
+@media (max-width: 1000px) {
+  .stat-cards-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .panel-row {
+    grid-template-columns: 1fr;
+  }
+
+  .projects-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .stat-cards-row {
+    grid-template-columns: 1fr;
+  }
+
+  #content {
+    padding: 16px;
+  }
+}
