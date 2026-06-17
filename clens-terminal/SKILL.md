@@ -1,6 +1,6 @@
 ---
 name: clens
-description: Display live Claude session token capacity dashboard from local .jsonl tracks
+description: Display live Claude session token capacity dashboard exactly once per invocation.
 disable-model-invocation: true
 ---
 
@@ -10,9 +10,7 @@ Run the local Claude session token capacity monitor and echo its raw output.
 
 ## Execution
 
-Execute this exact command using your bash shell tool and pass every character
-of stdout to the user verbatim — do not summarize, truncate, format, or
-interpret the resulting text:
+Execute this exact command using your bash shell tool and display the raw stdout text exactly as it returns:
 
 ```sh
 python C:\Users\YOUR_USERNAME\Desktop\clens.py
