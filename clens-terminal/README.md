@@ -1,4 +1,5 @@
-# ◈ clens — Zero-Token Claude Runtime Telemetry Engine
+# ◈ clens — Claude Runtime Telemetry Engine 
+<!-- \\ not true due to arbitrary skill.md structure. -->
 
 A lightweight, zero-dependency local CLI utility and real-time status line engine designed specifically to monitor context window consumption and token allocations across Anthropic's Claude toolchains.
 
@@ -19,7 +20,7 @@ A comprehensive, filesystem-driven analysis utility. It scans your local machine
 * **Ceiling Threshold:** 3,000,000 tokens
 
 ### 2. Live Native HUD Mode (`statusline.py`)
-A stateless, zero-token background process that hooks straight into the Claude Code terminal lifecycle loop. Instead of hitting the disk, it intercepts the raw JSON streaming tick packets directly from standard input (`sys.stdin`) on every turn—rendering a high-density utility gauge completely on your local CPU.
+A stateless,<!-- \\ not true due to arbitrary skill.md structure. --> background process that hooks straight into the Claude Code terminal lifecycle loop. Instead of hitting the disk, it intercepts the raw JSON streaming tick packets directly from standard input (`sys.stdin`) on every turn—rendering a high-density utility gauge completely on your local CPU.
 
 ---
 
